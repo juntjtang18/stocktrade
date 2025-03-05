@@ -1,0 +1,118 @@
+let's do it again. setup the strapi just as in production environment, init strapi project(pg-strapi), which connect to postgres cloud sql instance: 	
+lucid-arch-451211-b0:us-west1:cloud-sql-server. dbname="strapi-db", dbuser="dbadmin", and use ADC to connect cloud storage. bucket name: lucid-arch-451211-b0-strapi-storage 
+
+
+
+gcloud run deploy strapi \
+  --image gcr.io/lucid-arch-451211-b0/strapi \
+  --platform managed \
+  --region us-west1 \
+  --add-cloudsql-instances lucid-arch-451211-b0:us-west1:cloud-sql-server \
+  --set-env-vars "NODE_ENV=production,PORT=8080,CLOUD_SQL_INSTANCE=lucid-arch-451211-b0:us-west1:cloud-sql-server,DATABASE_NAME=strapi-db,DATABASE_USERNAME=dbadmin,DATABASE_PASSWORD=tj13in4link" \
+  --allow-unauthenticated
+
+  gcloud run deploy strapi \
+  --image gcr.io/lucid-arch-451211-b0/strapi \
+  --platform managed \
+  --region us-west1 \
+  --add-cloudsql-instances lucid-arch-451211-b0:us-west1:cloud-sql-server \
+  --set-env-vars "CLOUD_SQL_INSTANCE=lucid-arch-451211-b0:us-west1:cloud-sql-server,DATABASE_NAME=strapi-db,DATABASE_USERNAME=dbadmin,DATABASE_PASSWORD=tj13in4link" \
+  --memory 1Gi \
+  --allow-unauthenticated \
+  --timeout 600
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  npx create-strapi-app@4.15.5 pg-strapi4 \
+  --dbclient=postgres \
+  --dbhost=/cloudsql/lucid-arch-451211-b0:us-west1:cloud-sql-server \
+  --dbname=strapi-db \
+  --dbusername=dbadmin \
+  --dbpassword=tj13in4link \
+  --dbport=5432 \
+  --no-run
+cd pg-strapi4
+
+config/database.js
+module.exports = ({ env }) => ({
+  connection: {
+    client: 'postgres',
+    connection: {
+      host: `/cloudsql/${env('CLOUD_SQL_INSTANCE', 'lucid-arch-451211-b0:us-west1:cloud-sql-server')}`,
+      database: env('DATABASE_NAME', 'strapi-db'),
+      user: env('DATABASE_USERNAME', 'dbadmin'),
+      password: env('DATABASE_PASSWORD', 'tj13in4link'),
+      // No port needed for Unix socket
+    },
+  },
+});
+
+
+package.json
+{
+  "name": "pg-strapi4",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@strapi/strapi": "4.15.5",
+    "@strapi/plugin-users-permissions": "4.15.5",
+    "@strapi/plugin-i18n": "4.15.5",
+    "@strapi/plugin-cloud": "4.15.5",
+    "@strapi-community/strapi-provider-upload-google-cloud-storage": "^4.10.5",
+    "pg": "8.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=18.x.x",
+    "npm": ">=6.0.0"
+  }
+}
+
+npm install
+
+
+config/plugins.js
+module.exports = () => ({
+  'upload': {
+    config: {
+      provider: '@strapi-community/strapi-provider-upload-google-cloud-storage',
+      providerOptions: {
+        bucketName: 'lucid-arch-451211-b0-strapi-storage',
+        publicFiles: true,
+        uniform: false,
+        basePath: '',
+      },
+    },
+  },
+});
+This rely on ADC, which assume there is already a default google cloud credential file in ~/.config/gcloud/application_default_credentials.json
+if not:
+gcloud auth default-application login
+
+
+curl -o cloud-sql-proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
+chmod +x cloud-sql-proxy
+mv cloud_sql_proxy /usr/local/bin/
+
+
+# on macOS
+cloud_sql_proxy lucid-arch-451211-b0:us-west1:cloud-sql-server --unix-socket=/cloudsql 
+# on linux
+cloud_sql_proxy -instances=lucid-arch-451211-b0:us-west1:cloud-sql-server -dir=/cloudsql

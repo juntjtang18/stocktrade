@@ -1,0 +1,4 @@
+Sequence Length,LSTM Accuracy (Method 1),LSTM Accuracy (Method 2),LSTM Accuracy (Method 3),LSTM Accuracy (Method 4),MACD Accuracy (Method 1),MACD Accuracy (Method 2),MACD Accuracy (Method 3),MACD Accuracy (Method 4)
+5,0.5054,0.6989,0.9462,0.8925,0.8,0.6,0.8,0.8
+10,0.8478,0.9239,0.9783,0.9239,0.6,0.2,0.4,0.4
+15,0.8681,0.6593,0.978,0.9341,0.0,0.0,0.0,0.0

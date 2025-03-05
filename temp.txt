@@ -1,0 +1,54 @@
+(venv) JundeMacBook-Pro2019:stocktrade James$ python3 --version  # Should show Python 3.12.9
+Python 3.12.9
+(venv) JundeMacBook-Pro2019:stocktrade James$ pip3 --version     # Shows pip version and associated Python
+pip 25.0 from /Users/James/develop/stocktrade/venv/lib/python3.12/site-packages/pip (python 3.12)
+(venv) JundeMacBook-Pro2019:stocktrade James$ 
+
+
+(venv) JundeMacBook-Pro2019:stocktrade James$ python chkenv.py 
+2025-03-03 13:04:54.371042: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Python version: 3.12.9 (main, Feb  4 2025, 14:38:38) [Clang 16.0.0 (clang-1600.0.26.6)]
+pip version: 25.0
+yfinance version: 0.2.54
+pandas version: 2.2.3
+numpy version: 1.26.4
+tensorflow version: 2.16.2
+scikit-learn version: 1.6.1
+pandas_ta version: 0.3.14b0
+matplotlib version: 3.10.0
+
+(venv) JundeMacBook-Pro2019:stocktrade James$ python test_yfinance.py 
+YF.download() has changed argument auto_adjust default to True
+Data fetched: 1297 rows
+Price           Close       High        Low       Open     Volume
+Ticker           AAPL       AAPL       AAPL       AAPL       AAPL
+Date                                                             
+2020-01-02  72.716064  72.776591  71.466805  71.721011  135480400
+2020-01-03  72.009109  72.771737  71.783954  71.941321  146322800
+2020-01-06  72.582932  72.621669  70.876098  71.127888  118387200
+2020-01-07  72.241539  72.849216  72.021223  72.592586  108872000
+2020-01-08  73.403641  73.706271  71.943751  71.943751  132079200
+Price            Close        High         Low        Open    Volume
+Ticker            AAPL        AAPL        AAPL        AAPL      AAPL
+Date                                                                
+2025-02-24  247.100006  248.860001  244.419998  244.929993  51326400
+2025-02-25  247.039993  250.000000  244.910004  248.000000  48013300
+2025-02-26  240.360001  244.979996  239.130005  244.330002  44433600
+2025-02-27  237.300003  242.460007  237.059998  239.410004  41153600
+2025-02-28  241.839996  242.089996  230.199997  236.949997  56796200
+
+
+https://www.alphavantage.co/support/#api-key
+www.alphavantage.co
+Welcome to Alpha Vantage! Your API key is: WTW6JPZU827ZHUTH. Please record this API key at a safe place for future data access.
+
+
+
+Alpaca
+juntjtang@gmail.com/Y9s2!*UE9skYHcL
+
+1015e0a9-8d3d-4932-be39-640f117a639d
+
+
+pip3 install yfinance==0.2.43 pandas==2.1.4 numpy==1.26.0 tensorflow==2.16.1 scikit-learn==1.3.0 pandas_ta==0.3.14b0 matplotlib==3.8.0
