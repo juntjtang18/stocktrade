@@ -5,6 +5,7 @@ import os
 import yfinance as yf
 from datetime import datetime, timedelta
 import pytz
+import holidays  # New import for holiday handling
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -29,24 +30,35 @@ def download_data(stock_symbol, api_key="nymCOaghA4Yf08LppHIKqpIagI5Z6Vy0", sour
     start_date = "2020-01-01"
 
     def get_last_trading_date(current_date_time):
-        """Return the last trading date based on current time in ET."""
+        """Return the last trading date, accounting for weekends and U.S. holidays."""
         et_tz = pytz.timezone('America/New_York')
         current_date = current_date_time.date()
         weekday = current_date.weekday()  # 0 = Monday, 6 = Sunday
+        
+        # Initialize U.S. holidays (NYSE typically follows these)
+        us_holidays = holidays.US(years=[current_date.year, current_date.year - 1])
         
         # Check if before or after 4:30 PM ET
         closing_time = current_date_time.replace(hour=16, minute=30, second=0, microsecond=0, tzinfo=et_tz)
         
         if current_date_time < closing_time:  # Before 4:30 PM ET
             if weekday == 0:  # Monday
-                return current_date - timedelta(days=3)  # Previous Friday
-            return current_date - timedelta(days=1)  # Previous day
+                candidate_date = current_date - timedelta(days=3)  # Previous Friday
+            else:
+                candidate_date = current_date - timedelta(days=1)  # Previous day
         else:  # After 4:30 PM ET
             if weekday == 5:  # Saturday
-                return current_date - timedelta(days=1)  # Friday
+                candidate_date = current_date - timedelta(days=1)  # Friday
             elif weekday == 6:  # Sunday
-                return current_date - timedelta(days=2)  # Friday
-            return current_date  # Today (Monday-Friday)
+                candidate_date = current_date - timedelta(days=2)  # Friday
+            else:
+                candidate_date = current_date  # Today (Monday-Friday)
+
+        # Step back if candidate_date is a weekend or holiday
+        while candidate_date.weekday() >= 5 or candidate_date in us_holidays:
+            candidate_date -= timedelta(days=1)
+        
+        return candidate_date
 
     def is_data_up_to_date(file_path):
         if not os.path.exists(file_path):
